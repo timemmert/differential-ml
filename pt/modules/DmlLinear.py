@@ -25,8 +25,8 @@ class DmlLinear(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return (self.activation(x) @ self.weight) + self.bias
 
-    def greek(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    def greek(self, x: torch.Tensor, prev_greek: torch.Tensor) -> torch.Tensor:
         """
         For a given forward pass with input `x`, i.e. `y = forward(x)`; we can compute the greek of the output.
         """
-        return (y @ self.weight.T) * self.activation_derivative(x)[:, None]
+        return (prev_greek @ self.weight.T) * self.activation_derivative(x)[:, None]

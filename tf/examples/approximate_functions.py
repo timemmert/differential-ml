@@ -5,7 +5,7 @@ from keras.layers import Dense
 from keras.losses import mse
 from keras.optimizers import Adam, Nadam
 import tensorflow as tf
-from models.model_builder import ModelFactory
+from tf.models.model_builder import ModelFactory
 from util.data_util import DataNormalizer
 
 

@@ -23,7 +23,7 @@ class DmlLinear(nn.Module):
         return torch.diagonal(autograd.functional.jacobian(self.activation, x))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.activation((x @ self.weight) + self.bias)
+        return (self.activation(x) @ self.weight) + self.bias
 
     def greek(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """

@@ -1,3 +1,4 @@
 tensorflow-macos
 numpy
 matplotlib
+torch

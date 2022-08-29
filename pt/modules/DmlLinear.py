@@ -8,8 +8,8 @@ class DmlLinear(nn.Module):
 
     def __init__(
             self,
-            input_dim: torch.Tensor,
-            output_dim: torch.Tensor,
+            input_dim: int,
+            output_dim: int,
             activation: Callable[[torch.Tensor], torch.Tensor],
     ):
         super().__init__()

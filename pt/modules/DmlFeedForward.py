@@ -23,16 +23,8 @@ class DmlFeedForward(nn.Module):
         self.hidden_layer_dimension = hidden_layer_dimension
         self.activation = activation
 
-        self.input_layer = self._create_input_layer()
-        self.hidden_layers = self._create_hidden_layers()
-        self.output_layer = self._create_output_layer()
-
-    def _create_input_layer(self) -> DmlLinear:
-        # noinspection PyTypeChecker
-        return DmlLinear(self.input_dimension, self.hidden_layer_dimension, nn.Identity)
-
-    def _create_hidden_layers(self) -> nn.ModuleDict:
-        return nn.ModuleDict(
+        self.input_layer = DmlLinear(self.input_dimension, self.hidden_layer_dimension, nn.Identity())
+        self.hidden_layers = nn.ModuleDict(
             {
                 self.get_layer_name(hidden_layer_number): DmlLinear(
                     self.hidden_layer_dimension,
@@ -41,9 +33,7 @@ class DmlFeedForward(nn.Module):
                 ) for hidden_layer_number in range(self.number_of_hidden_layers)
             }
         )
-
-    def _create_output_layer(self) -> DmlLinear:
-        return DmlLinear(self.hidden_layer_dimension, self.output_dimension, self.activation)
+        self.output_layer = DmlLinear(self.hidden_layer_dimension, self.output_dimension, self.activation)
 
     @property
     def layers_as_list(self) -> List[DmlLinear]:

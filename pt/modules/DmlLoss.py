@@ -25,7 +25,7 @@ class DmlLoss:
     ) -> torch.Tensor:
         ml_term = self.ml_loss_scale * self.ml_loss(y_out, y_target)
         dml_term = self.dml_loss_scale * self.dml_loss(y_out, y_target)
-        regularization_term = self.regularization_scale * self.model_regularization(net)
+        regularization_term = 0.0 # self.regularization_scale * self.model_regularization(net)
         return ml_term + dml_term + regularization_term
 
     def ml_loss(self, y_out: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:
@@ -44,4 +44,4 @@ class DmlLoss:
 
     @staticmethod
     def model_regularization(net: DmlFeedForward) -> torch.Tensor:
-        return torch.sum(torch.cat([torch.norm(layer.weight) for layer in net.layers_as_list]))
+        return torch.sum(torch.as_tensor([torch.norm(layer.weight) for layer in net.layers_as_list]), dtype=torch.float32)

@@ -12,7 +12,7 @@ class DmlTrainingStep:
     y_out: torch.Tensor
     y_target: torch.Tensor
     greek_out: torch.Tensor
-    greed_target: torch.Tensor
+    greek_target: torch.Tensor
     loss: torch.Tensor
     net: DmlFeedForward
 
@@ -24,7 +24,7 @@ class DmlTrainer:
     optimizer: torch.optim.Optimizer
 
     def step(self, x: torch.Tensor, y_target: torch.Tensor, greek_target: torch.Tensor) -> DmlTrainingStep:
-        y_out, greek_out = self.net.forward_with_outputs(x)
+        y_out, greek_out = self.net.forward_with_greek(x)
         loss = self.loss(y_out, y_target, greek_out, greek_target, self.net)
         self.net.zero_grad()
         loss.backward()

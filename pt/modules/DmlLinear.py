@@ -29,4 +29,4 @@ class DmlLinear(nn.Module):
         """
         For a given forward pass with input `x`, i.e. `y = forward(x)`; we can compute the greek of the output.
         """
-        return (prev_greek @ self.weight.T) * self.activation_derivative(x)[:, None]
+        return (prev_greek @ self.weight.T) * self.activation_derivative(x)

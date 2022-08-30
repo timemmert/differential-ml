@@ -6,7 +6,7 @@ from torch import nn
 from pt.modules.DmlLinear import DmlLinear
 
 
-class DmlFeedForward(torch.Module):
+class DmlFeedForward(nn.Module):
 
     def __init__(
             self,
@@ -14,8 +14,9 @@ class DmlFeedForward(torch.Module):
             output_dimension: int,
             number_of_hidden_layers: int,
             hidden_layer_dimension: int,
-            activation: Callable[[torch.Tensor], torch.Tensor],
-    ):
+            activation: Callable[[torch.Tensor], torch.Tensor]
+            ):
+        super().__init__()
         self.input_dimension = input_dimension
         self.output_dimension = output_dimension
         self.number_of_hidden_layers = number_of_hidden_layers

@@ -12,6 +12,7 @@ from util.data_util import DataNormalizer
 def polynomial_and_trigonometric(n):
     # function y = 0.1*x³ + 0.2x² + 3*sin(3x)
     # derivative dydx = 3x² + 4x + cos(x)
+    # this is just a dummy comment
     x = np.random.uniform(low=-10, high=10, size=n)
     y = 0.1 * (x ** 3) + 0.2 * (x ** 2) + 3 * np.sin(3 * x) + 10
     dydx = 0.3 * (x ** 2) + 0.4 * x + 9 * np.cos(3 * x)

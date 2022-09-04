@@ -2,3 +2,4 @@ tensorflow-macos
 numpy
 matplotlib
 torch
+tqdm

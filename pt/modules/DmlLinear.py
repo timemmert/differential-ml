@@ -3,7 +3,7 @@ from typing import Callable
 import torch
 from torch import nn, autograd
 
-from pt.conversion.DmlModule import DmlModule
+from pt.modules.DmlModule import DmlModule
 
 
 class DmlLinear(DmlModule):

@@ -15,7 +15,7 @@ class DmlModule(torch.nn.Module):
         # TODO. Check that this is not a subclass of DmlModule already
 
         class DmlVersionOfModule(cls, type(module)):
-            # TODO. Check if it is possible to get a more comprehensive name for this.
             pass
+        DmlVersionOfModule.__name__ = 'Dml' + module.__class__.__name__
 
         module.__class__ = DmlVersionOfModule

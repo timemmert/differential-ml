@@ -50,7 +50,6 @@ if __name__ == "__main__":
     print((list(net.parameters())))
 
     loss = DmlLoss(
-        _loss_metric=torch.nn.MSELoss(),
         _lambda=.5,
         _input_dim=normalizer.input_dimension,
         _lambda_j=normalizer.lambda_j,

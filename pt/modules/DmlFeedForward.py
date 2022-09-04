@@ -3,10 +3,11 @@ from typing import Callable, List, Tuple
 import torch
 from torch import nn
 
+from pt.conversion.DmlModule import DmlModule
 from pt.modules.DmlLinear import DmlLinear
 
 
-class DmlFeedForward(nn.Module):
+class DmlFeedForward(DmlModule):
 
     def __init__(
             self,

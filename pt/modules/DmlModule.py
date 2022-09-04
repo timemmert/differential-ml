@@ -19,4 +19,3 @@ class DmlModule(torch.nn.Module):
             pass
 
         module.__class__ = DmlVersionOfModule
-        

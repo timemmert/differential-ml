@@ -1,7 +1,9 @@
 import numpy as np
+import pytest
 import torch
 
-from pt.modules.DmlModule import DmlModule
+from pt.modules.DmlLinear import DmlLinear
+from pt.modules.DmlModule import DmlModule, AlreadyDmlModuleException
 
 
 def test_conversion():
@@ -22,4 +24,11 @@ def test_conversion():
     assert np.any(torch.diagonal(greek).numpy() == test_tensor_input * 2)
     assert np.any(y.numpy() == test_tensor_input ** 2)
     assert np.any(my_net(torch.as_tensor(test_tensor_input)).numpy() == y.numpy())
+
+
+def test_subclass_conversion():
+    dml_linear_net = DmlLinear(1, 1, torch.nn.Identity())
+
+    with pytest.raises(AlreadyDmlModuleException):
+        DmlModule.convert(dml_linear_net)
 

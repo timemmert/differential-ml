@@ -4,9 +4,9 @@ from keras.losses import mse
 from keras.models import Model
 from keras.optimizers import Adam
 
-from layers.backprop_dense import BackpropDense
-from layers.backprop_dense_output import BackpropDenseOutput
-from layers.forward_dense import ForwardDense
+from tf.layers.backprop_dense import BackpropDense
+from tf.layers.backprop_dense_output import BackpropDenseOutput
+from tf.layers.forward_dense import ForwardDense
 
 _LOSS_METRIC = mse
 

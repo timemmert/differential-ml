@@ -3,8 +3,10 @@ from typing import Callable
 import torch
 from torch import nn, autograd
 
+from pt.modules.DmlModule import DmlModule
 
-class DmlLinear(nn.Module):
+
+class DmlLinear(DmlModule):
 
     def __init__(
             self,

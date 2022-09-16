@@ -6,7 +6,7 @@ from keras.losses import mse
 from keras.optimizers import Adam, Nadam
 import tensorflow as tf
 from tf.models.model_builder import ModelFactory
-from util.data_util import DataNormalizer
+from util.preprocessing_util import DataNormalizer
 
 
 def polynomial_and_trigonometric(n):

@@ -15,9 +15,9 @@ class OutputFormat(Enum):
 
 
 def aad_datagen(
-        x: Tuple[torch.tensor, np.array],
-        datagen_function: Callable[[torch.tensor], torch.tensor],
-        output_format: OutputFormat = OutputFormat.NUMPY
+    x: Tuple[torch.tensor, np.array],
+    datagen_function: Callable[[torch.tensor], torch.tensor],
+    output_format: OutputFormat = OutputFormat.NUMPY,
 ):
     if not torch.is_tensor(x):
         x = torch.tensor(x, requires_grad=True)
@@ -31,6 +31,8 @@ def aad_datagen(
     
     As the input x is of shape (n, n_x) and y of shape (n, n_y), dydx is computed as (n, n_y, n, n_x). As n becomes
     bigger, the computation becomes slower due to the differentiation in the unnecessary dimension.
+    
+    A fix by the pytorch community will be available in the future.
     """
     dydx = jacobian(datagen_function, x).sum(dim=2)
 
@@ -42,44 +44,73 @@ def aad_datagen(
         raise NotImplementedError(f"Output format {output_format} not supported")
 
 
-def trigonometric_one_in_one_out(n: int, x_range: Tuple[float, float] = (-10, 10),
-                                 output_format: OutputFormat = OutputFormat.NUMPY):
-    x = uniform_random_in_range(n, 1, start=x_range[0], end=x_range[1])
-    return aad_datagen(x, lambda x_: (torch.sin(x_[:, 0]) + x_[:, 0] * torch.cos(x_[:, 0]))[:, None], output_format=output_format)
+def trigonometric_one_in_one_out(
+    n: int,
+    x_range: Tuple[float, float] = (-10, 10),
+    output_format: OutputFormat = OutputFormat.NUMPY,
+):
+    n_x = 1
+    x = uniform_random_in_range(n, n_x, data_range=x_range)
+    return aad_datagen(
+        x,
+        lambda x_: (torch.sin(x_[:, 0]) + x_[:, 0] * torch.cos(x_[:, 0]))[:, None],
+        output_format=output_format,
+    )
 
 
-def quadratic_one_in_one_out(a: float, n: int, x_range: Tuple[float, float] = (-10, 10),
-                             output_format: OutputFormat = OutputFormat.NUMPY):
-    x = uniform_random_in_range(n, 1, start=x_range[0], end=x_range[1])
-    return aad_datagen(x, lambda x_: (a * x_[:, 0] ** 2)[:, None], output_format=output_format)
+def quadratic_one_in_one_out(
+    a: float,
+    n: int,
+    x_range: Tuple[float, float] = (-10, 10),
+    output_format: OutputFormat = OutputFormat.NUMPY,
+):
+    n_x = 1
+    x = uniform_random_in_range(n, n_x, data_range=x_range)
+    return aad_datagen(
+        x,
+        lambda x_: (a * x_[:, 0] ** 2)[:, None],
+        output_format=output_format
+    )
 
 
-def quadratic_two_in_one_out(a: float, n: int, x_range: Tuple[float, float] = (-10, 10),
-                             output_format: OutputFormat = OutputFormat.NUMPY):
-    x = uniform_random_in_range(n, 2, start=x_range[0], end=x_range[1])
-    return aad_datagen(x, lambda x_: (a * x_[:, 0] ** 2 * x_[:, 1] ** 2)[:, None], output_format=output_format)
+def quadratic_two_in_one_out(
+    a: float,
+    n: int,
+    x_range: Tuple[float, float] = (-10, 10),
+    output_format: OutputFormat = OutputFormat.NUMPY,
+):
+    n_x = 2
+    x = uniform_random_in_range(n, n_x, data_range=x_range)
+    return aad_datagen(
+        x,
+        lambda x_: (a * x_[:, 0] ** 2 * x_[:, 1] ** 2)[:, None],
+        output_format=output_format,
+    )
 
 
-def polynomial_trigonometric_two_in_one_out(n: int, x_range: Tuple[float, float] = (-10, 10),
-                                            output_format: OutputFormat = OutputFormat.NUMPY):
-    x = uniform_random_in_range(n, 2, start=x_range[0], end=x_range[1])
-    return aad_datagen(x, lambda x_: (x_[:, 0] ** 3 * x_[:, 1] ** 2 + torch.sin(x_[:, 0]) * x_[:, 1])[:, None],
-                       output_format=output_format)
+def polynomial_trigonometric_two_in_one_out(
+    n: int,
+    x_range: Tuple[float, float] = (-10, 10),
+    output_format: OutputFormat = OutputFormat.NUMPY,
+):
+    n_x = 2
+    x = uniform_random_in_range(n, n_x, data_range=x_range)
+    return aad_datagen(
+        x,
+        lambda x_: (x_[:, 0] ** 3 * x_[:, 1] ** 2 + torch.sin(x_[:, 0]) * x_[:, 1])[:, None],
+        output_format=output_format,
+    )
 
 
 def trigonometric_two_in_two_out(
-        n: int,
-        x_range: Tuple[float, float] = (-10, 10),
-        output_format: OutputFormat = OutputFormat.NUMPY
+    n: int,
+    x_range: Tuple[float, float] = (-10, 10),
+    output_format: OutputFormat = OutputFormat.NUMPY,
 ):
-    x = uniform_random_in_range(n, 2, start=x_range[0], end=x_range[1])
+    n_x = 2
+    x = uniform_random_in_range(n, n_x, data_range=x_range)
     return aad_datagen(
         x,
-        lambda x_: torch.stack(
-            (
-                torch.sin(x_[:, 0]), torch.cos(x_[:, 1])
-            ),
-            dim=1
-        ),
-        output_format=output_format
+        lambda x_: torch.stack((torch.sin(x_[:, 0]), torch.cos(x_[:, 1])), dim=1),
+        output_format=output_format,
     )

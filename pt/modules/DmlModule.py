@@ -1,3 +1,4 @@
+import warnings
 from typing import Tuple
 
 import torch
@@ -16,6 +17,8 @@ class DmlModule(torch.nn.Module):
 
     @classmethod
     def convert(cls, module: torch.nn.Module) -> None:
+
+        warnings.warn('This feature is experimental.')
 
         cls.check_model_is_not_dml_module(module)
 

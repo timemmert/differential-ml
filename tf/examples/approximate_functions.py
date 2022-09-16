@@ -5,20 +5,11 @@ from keras.layers import Dense
 from keras.losses import mse
 from keras.optimizers import Adam, Nadam
 import tensorflow as tf
+
+from examples.data_generation.functions import trigonometric_one_in_one_out
 from tf.models.model_builder import ModelFactory
 from util.preprocessing_util import DataNormalizer
 
-
-def polynomial_and_trigonometric(n):
-    # function y = 0.1*x³ + 0.2x² + 3*sin(3x)
-    # derivative dydx = 3x² + 4x + cos(x)
-    x = np.random.uniform(low=-10, high=10, size=n)
-    y = 0.1 * (x ** 3) + 0.2 * (x ** 2) + 3 * np.sin(3 * x) + 10
-    dydx = 0.3 * (x ** 2) + 0.4 * x + 9 * np.cos(3 * x)
-
-    #plt.scatter(x, y)
-    #plt.show()
-    return x.reshape(-1, 1), y.reshape(-1, 1), dydx.reshape(-1, 1)
 
 ep_train = 100
 def train_differential_ml():
@@ -96,8 +87,8 @@ if __name__ == "__main__":
 
     n_train = 10000
     n_test = 1000
-    x_train, y_train, dydx_train = polynomial_and_trigonometric(n_train)
-    x_test, y_test, dydx_test = polynomial_and_trigonometric(n_test)
+    x_train, y_train, dydx_train = trigonometric_one_in_one_out(n_train)
+    x_test, y_test, dydx_test = trigonometric_one_in_one_out(n_test)
 
     normalizer = DataNormalizer()
 

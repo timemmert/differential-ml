@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from tqdm.auto import tqdm
 
-from examples.data_generation.functions import trigonometric_one_dim
+from examples.data_generation.functions import trigonometric_one_in_one_out
 from pt.DmlTrainer import DmlTrainer
 from pt.modules.DmlFeedForward import DmlFeedForward
 from pt.modules.DmlLoss import DmlLoss
@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     n_train = 1000
     n_test = 1000
-    x_train, y_train, dydx_train = trigonometric_one_dim(n_train)
-    x_test, y_test, dydx_test = trigonometric_one_dim(n_test)
+    x_train, y_train, dydx_train = trigonometric_one_in_one_out(n_train)
+    x_test, y_test, dydx_test = trigonometric_one_in_one_out(n_test)
 
     normalizer = DataNormalizer()
 

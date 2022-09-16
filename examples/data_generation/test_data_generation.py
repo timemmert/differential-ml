@@ -18,7 +18,7 @@ class TestDataGeneration(unittest.TestCase):
         n_test = 1000
         start = 100
         end = 105
-        data = uniform_random_in_range(n_test, start=start, end=end)
+        data = uniform_random_in_range(n_test, data_range=(start, end))
         assert all(data > start)
         assert all(data < end)
 

@@ -56,7 +56,7 @@ class DmlFeedForward(DmlModule):
         return outputs
 
     def greek(self, outputs: List[torch.Tensor]) -> torch.Tensor:
-        greek = torch.eye(outputs[-1].shape[0])
+        greek = torch.eye(outputs[-1].shape[1]).repeat(outputs[-1].shape[0], 1, 1)
         for layer, output in reversed(list(zip(self.layers_as_list, outputs[:-1]))):
             greek = layer.greek(x=output, prev_greek=greek)
 
@@ -65,4 +65,3 @@ class DmlFeedForward(DmlModule):
     def forward_with_greek(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         outputs = self.forward_with_outputs(x)
         return outputs[-1], self.greek(outputs)
-

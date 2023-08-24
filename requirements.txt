@@ -1,6 +1,9 @@
 tensorflow-macos
 numpy
 matplotlib
+--extra-index-url https://download.pytorch.org/whl/nightly/cpu
 torch
+torchvision
+torchaudio
 tqdm
 pytest

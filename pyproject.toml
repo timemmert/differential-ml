@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "differential-ml"
+version = "0.1.0"
+description = "Poetry environment for the differential-ml repo"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11"
+tensorflow-macos = "^2.13.0"
+numpy = "^1.25.0"
+matplotlib = "^3.8.0"
+torch = "^2.0.1"
+torchvision = "^0.15.2"
+torchaudio = "^2.0.2"
+tqdm = "^4.66.1"
+pytest = "^7.4.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

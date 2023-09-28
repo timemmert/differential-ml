@@ -7,6 +7,8 @@ from torch.nn import MSELoss
 
 from pt.modules.DmlFeedForward import DmlFeedForward
 
+from differential_ml.pt.modules.device import global_device
+
 
 @dataclass
 class DmlLoss:
@@ -38,7 +40,7 @@ class DmlLoss:
 
     @property
     def _lambda_j_torch(self):
-        return torch.tensor(self._lambda_j, dtype=torch.float32)
+        return torch.tensor(self._lambda_j, dtype=torch.float32, device=global_device)
 
     def dml_loss(self, greek_out: torch.Tensor, greek_target: torch.Tensor) -> torch.Tensor:
         n_inputs = greek_out.shape[2]
@@ -47,7 +49,6 @@ class DmlLoss:
     @cached_property
     def ml_loss_scale(self) -> torch.Tensor:
         return torch.tensor(1.0 / (1.0 + self._lambda * self._input_dim), dtype=torch.float32)
-
 
     @cached_property
     def dml_loss_scale(self) -> torch.Tensor:

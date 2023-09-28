@@ -5,6 +5,8 @@ import torch
 from pt.modules.DmlFeedForward import DmlFeedForward
 from pt.modules.DmlLoss import DmlLoss
 
+from differential_ml.pt.modules.device import global_device
+
 
 @dataclass
 class DmlTrainingStep:

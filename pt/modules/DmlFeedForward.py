@@ -6,6 +6,8 @@ from torch import nn
 from pt.modules.DmlModule import DmlModule
 from pt.modules.DmlLinear import DmlLinear
 
+from differential_ml.pt.modules.device import global_device
+
 
 class DmlFeedForward(DmlModule):
 
@@ -56,7 +58,7 @@ class DmlFeedForward(DmlModule):
         return outputs
 
     def greek(self, outputs: List[torch.Tensor]) -> torch.Tensor:
-        greek = torch.eye(outputs[-1].shape[1]).repeat(outputs[-1].shape[0], 1, 1)
+        greek = torch.eye(outputs[-1].shape[1], device=global_device).repeat(outputs[-1].shape[0], 1, 1)
         for layer, output in reversed(list(zip(self.layers_as_list, outputs[:-1]))):
             greek = layer.greek(x=output, prev_greek=greek)
 

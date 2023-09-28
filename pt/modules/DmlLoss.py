@@ -28,7 +28,7 @@ class DmlLoss:
         batch_size = y_out.shape[0]
         ml_term = self.ml_loss_scale * self.ml_loss(y_out, y_target)
         dml_term = self.dml_loss_scale * self.dml_loss(greek_out, greek_target)
-        regularization_term = 0.0  # self.regularization_scale * self.model_regularization(net)
+        regularization_term = self.regularization_scale * self.model_regularization(net)
         return (ml_term + dml_term + regularization_term) * 1 / batch_size
 
     @property
@@ -56,4 +56,9 @@ class DmlLoss:
 
     @staticmethod
     def model_regularization(net: DmlFeedForward) -> torch.Tensor:
-        return torch.sum(torch.as_tensor([torch.norm(layer.weight) for layer in net.layers_as_list]), dtype=torch.float32)
+        return torch.sum(
+            torch.as_tensor(
+                [torch.norm(layer.weight) for layer in net.layers_as_list]
+            ),
+            dtype=torch.float32,
+        )

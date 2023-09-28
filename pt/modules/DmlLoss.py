@@ -36,16 +36,18 @@ class DmlLoss:
     def ml_loss(self, y_out: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:
         return self._mse_loss(y_out, y_target)
 
-    @cached_property
-    def ml_loss_scale(self) -> torch.Tensor:
-        return torch.tensor(1.0 / (1.0 + self._lambda * self._input_dim), dtype=torch.float32)
-
     @property
     def _lambda_j_torch(self):
         return torch.tensor(self._lambda_j, dtype=torch.float32)
 
     def dml_loss(self, greek_out: torch.Tensor, greek_target: torch.Tensor) -> torch.Tensor:
-        return torch.mean(self._mse_loss(greek_out * self._lambda_j_torch, greek_target * self._lambda_j_torch), dim=-1)
+        n_inputs = greek_out.shape[2]
+        return self._mse_loss(greek_out * self._lambda_j_torch, greek_target * self._lambda_j_torch) / n_inputs
+
+    @cached_property
+    def ml_loss_scale(self) -> torch.Tensor:
+        return torch.tensor(1.0 / (1.0 + self._lambda * self._input_dim), dtype=torch.float32)
+
 
     @cached_property
     def dml_loss_scale(self) -> torch.Tensor:

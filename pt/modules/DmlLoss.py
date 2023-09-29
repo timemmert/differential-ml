@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Callable
+from typing import Callable, List
 
 import torch
 from torch.nn import MSELoss
@@ -16,6 +16,7 @@ class DmlLoss:
     _input_dim: int
     _lambda_j: float
     regularization_scale: float = 0.0
+    _list_ratio: List[float] = None
 
     def __call__(
         self,
@@ -29,6 +30,10 @@ class DmlLoss:
         ml_term = self.ml_loss_scale * self.ml_loss(y_out, y_target)
         dml_term = self.dml_loss_scale * self.dml_loss(greek_out, greek_target)
         regularization_term = self.regularization_scale * self.model_regularization(net)
+        if self._list_ratio is None:
+            self._list_ratio = []
+        if dml_term.item() != 0:
+            self._list_ratio.append(dml_term.item() / ml_term.item())
         return (ml_term + dml_term + regularization_term) * 1 / batch_size
 
     @property

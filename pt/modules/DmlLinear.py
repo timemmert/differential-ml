@@ -5,6 +5,8 @@ from torch import nn, autograd
 
 from pt.modules.DmlModule import DmlModule
 
+from differential_ml.pt.modules.device import global_device
+
 
 class DmlLinear(DmlModule):
 
@@ -15,8 +17,8 @@ class DmlLinear(DmlModule):
             activation: Callable[[torch.Tensor], torch.Tensor],
     ):
         super().__init__()
-        self.weight = nn.Parameter(torch.empty(input_dim, output_dim))
-        self.bias = nn.Parameter(torch.empty(output_dim))
+        self.weight = nn.Parameter(torch.empty(input_dim, output_dim, device=global_device))
+        self.bias = nn.Parameter(torch.empty(output_dim, device=global_device))
 
         self.activation: Callable[[torch.Tensor], torch.Tensor] = activation
 

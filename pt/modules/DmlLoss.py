@@ -7,6 +7,8 @@ from torch.nn import MSELoss
 
 from pt.modules.DmlFeedForward import DmlFeedForward
 
+from differential_ml.pt.modules.device import global_device
+
 
 @dataclass
 class DmlLoss:
@@ -26,7 +28,7 @@ class DmlLoss:
         batch_size = y_out.shape[0]
         ml_term = self.ml_loss_scale * self.ml_loss(y_out, y_target)
         dml_term = self.dml_loss_scale * self.dml_loss(greek_out, greek_target)
-        regularization_term = 0.0  # self.regularization_scale * self.model_regularization(net)
+        regularization_term = self.regularization_scale * self.model_regularization(net)
         return (ml_term + dml_term + regularization_term) * 1 / batch_size
 
     @property
@@ -36,16 +38,17 @@ class DmlLoss:
     def ml_loss(self, y_out: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:
         return self._mse_loss(y_out, y_target)
 
+    @property
+    def _lambda_j_torch(self):
+        return torch.tensor(self._lambda_j, dtype=torch.float32, device=global_device)
+
+    def dml_loss(self, greek_out: torch.Tensor, greek_target: torch.Tensor) -> torch.Tensor:
+        n_inputs = greek_out.shape[2]
+        return self._mse_loss(greek_out * self._lambda_j_torch, greek_target * self._lambda_j_torch) / n_inputs
+
     @cached_property
     def ml_loss_scale(self) -> torch.Tensor:
         return torch.tensor(1.0 / (1.0 + self._lambda * self._input_dim), dtype=torch.float32)
-
-    @property
-    def _lambda_j_torch(self):
-        return torch.tensor(self._lambda_j, dtype=torch.float32)
-
-    def dml_loss(self, greek_out: torch.Tensor, greek_target: torch.Tensor) -> torch.Tensor:
-        return torch.mean(self._mse_loss(greek_out * self._lambda_j_torch, greek_target * self._lambda_j_torch), dim=-1)
 
     @cached_property
     def dml_loss_scale(self) -> torch.Tensor:
@@ -53,4 +56,9 @@ class DmlLoss:
 
     @staticmethod
     def model_regularization(net: DmlFeedForward) -> torch.Tensor:
-        return torch.sum(torch.as_tensor([torch.norm(layer.weight) for layer in net.layers_as_list]), dtype=torch.float32)
+        return torch.sum(
+            torch.as_tensor(
+                [torch.norm(layer.weight) for layer in net.layers_as_list]
+            ),
+            dtype=torch.float32,
+        )
